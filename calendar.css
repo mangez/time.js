@@ -1,0 +1,66 @@
+.sunday {
+color:#FF0000;
+}
+
+.today {
+color:#FFFFFF;
+background-color:#1c8e90;
+border-radius:5px 5px;
+}
+.calendar-container {
+    border: 1px solid #c5bebe;
+    padding: 1px;
+    background-color: #dbe1e2;
+    box-shadow: #56565633 4px 4px;
+    width:60px;
+    z-index:100;
+}
+
+.calendar-container caption{
+    border: 1px solid #c5bebe;
+    padding: 1px;
+    background-color: #dbe1e2;
+    box-shadow: #56565633 4px 4px;
+	text-align: center;
+        padding:2px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size :14px;
+}
+
+
+.calendar-container th{
+        text-align: center;
+        padding:2px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size :12px;
+}
+.calendar-container td {
+        text-align: center;
+        padding:2px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size :12px;
+		 
+}
+
+.calendar-container td:hover {
+       color: #3e8e41;
+    cursor: pointer;
+}
+.navigationArrow{
+    display:inline-block;
+}
+
+.navLeft {
+position :relative ;
+left:-20px;
+}
+
+
+.navRight:hover , .navLeft:hover {
+    color: #3e8e41;
+    cursor: pointer;
+}
+.navRight {
+    position: relative;
+    left: 20px;
+}
