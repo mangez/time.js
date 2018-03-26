@@ -98,7 +98,7 @@ class calendar{
             calContent += "</tr>";
         }
          calContent += "</table >";
-        document.getElementById('calendar').innerHTML = calContent;
+        document.getElementById('time').innerHTML = calContent;
 
 
       
@@ -122,7 +122,7 @@ function setevent(objCalender) {
         if (td.innerHTML != "") {
 
             document.getElementById(_controlID).value = td.innerHTML + "/" + arrMonth[ objCalender.strMonth]+ "/" + objCalender.strYear;
-        document.getElementById("calendar").innerHTML="";
+        document.getElementById("time").innerHTML="";
 		}
     }
 }
