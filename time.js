@@ -8,7 +8,7 @@ function callOpenCalender(controlid) {
     setevent(objCalender);
 }
 
-arrMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+arrMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function monthadd(date, month)
 {
@@ -50,7 +50,7 @@ class calendar{
         this.strYear = this.d.getFullYear();
         this.strStartDay = new Date(this.strYear, this.strMonth, 1);
         this.strLastDay = new Date(this.strYear, this.strMonth + 1, 0);
-        this.arrMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        this.arrMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         this.CurrentDate = new Date();
         this.CurrentstrDay = this.CurrentDate.getDate();
@@ -67,7 +67,7 @@ class calendar{
             + this.strYear + "<div id='navRight' onclick='navigateToNextMonth(" + this.strDay + "," + this.strMonth + "," + this.strYear + ");' class='navigationArrow navRight'>&#9654;</div></caption>";
 
         calContent += "<thead><th class='sunday'>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></thead>";
-        var counter = 0
+        var counter = 0;
         var prevMonthDaysPadding = this.strStartDay.getDay();
         var currentMonthLastDay = this.strLastDay.getDate();
         //alert(currentMonthLastDay);
@@ -77,21 +77,21 @@ class calendar{
                 if (prevMonthDaysPadding <= 0) {
                     counter++;
                     var stclass = "";
-                    if (counter == this.strDay && this.strDay == this.CurrentstrDay
-                        && this.strMonth == this.CurrentstrMonth
-                        && this.strYear == this.CurrentstrYear) {
+                    if (counter === this.strDay && this.strDay === this.CurrentstrDay
+                        && this.strMonth === this.CurrentstrMonth
+                        && this.strYear === this.CurrentstrYear) {
                         stclass += " today ";
                     }
-                    if (j == 0) {
+                    if (j === 0) {
                         stclass += " sunday ";
                     }
 
-                    calContent += "<td name='days' class='" + stclass + "'>" + counter + "</td>"
+                    calContent += "<td name='days' class='" + stclass + "'>" + counter + "</td>";
 
 
                 } else {
                     prevMonthDaysPadding--;
-                    calContent += "<td></td>"
+                    calContent += "<td></td>";
                 }
 
             }
@@ -111,15 +111,15 @@ function setevent(objCalender) {
     let selectedTD;
     document.getElementById("calTable").onclick = function (event) {
         let target = event.target;
-        if (target.tagName != 'TD') { return; }
-		 if (target.parentElement.tagName != 'TR') { return; }
+        if (target.tagName !== 'TD') { return; }
+        if (target.parentElement.tagName !== 'TR') { return; }
 
         cellClick(target, objCalender);
-    }
+    };
 
     function cellClick(td, objCalender) {
        
-        if (td.innerHTML != "") {
+        if (td.innerHTML !== "") {
 
             document.getElementById(_controlID).value = td.innerHTML + "/" + arrMonth[ objCalender.strMonth]+ "/" + objCalender.strYear;
         document.getElementById("time").innerHTML="";
