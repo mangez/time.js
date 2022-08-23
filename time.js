@@ -1,8 +1,8 @@
 
 var _controlID;
-function callOpenCalender(controlid) {
+function callOpenCalender(controlId) {
    
-    _controlID = controlid;
+    _controlID = controlId;
     let objCalender = new calendar(new Date());
     objCalender.openCalendar();
     setevent(objCalender);
