@@ -121,7 +121,7 @@ function setevent(objCalender) {
        
         if (td.innerHTML !== "") {
 
-            document.getElementById(_controlID).value = td.innerHTML + "/" + arrMonth[ objCalender.strMonth]+ "/" + objCalender.strYear;
+            document.getElementById(_controlID).value = td.innerHTML + "-" + arrMonth[ objCalender.strMonth]+ "-" + objCalender.strYear;
         document.getElementById("time").innerHTML="";
 		}
     }
