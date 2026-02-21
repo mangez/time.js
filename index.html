@@ -1,15 +1,60 @@
-<! DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>
-             Time
-    </title>
-    <script src="time.js"></script>
-    <link rel="stylesheet" href ="time.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>time.js — Date Picker Demo</title>
+  <meta name="description" content="Demo page for the time.js lightweight vanilla JS date-picker widget." />
+  <link rel="stylesheet" href="time.css" />
 </head>
 <body>
-     <input type="text" id="test" onclick="openCalender(this.id);" />
-	 
-    <div id="time"></div>
+
+  <h1 style="font-family: sans-serif; margin: 40px 0 10px 40px;">time.js — Date Picker Demo</h1>
+
+  <div style="font-family: sans-serif; margin: 0 40px; display: flex; gap: 40px; flex-wrap: wrap;">
+
+    <!-- Date picker 1 -->
+    <div>
+      <label for="date1" style="display: block; margin-bottom: 6px; font-size: 14px;">
+        Pick a date (field 1)
+      </label>
+      <input
+        type="text"
+        id="date1"
+        class="timejs-input"
+        placeholder="DD-Mon-YYYY"
+        readonly
+        style="padding: 6px 10px; font-size: 14px; cursor: pointer; border: 1px solid #aaa; border-radius: 4px;"
+      />
+    </div>
+
+    <!-- Date picker 2 — demonstrates that two pickers work independently -->
+    <div>
+      <label for="date2" style="display: block; margin-bottom: 6px; font-size: 14px;">
+        Pick a date (field 2)
+      </label>
+      <input
+        type="text"
+        id="date2"
+        class="timejs-input"
+        placeholder="DD-Mon-YYYY"
+        readonly
+        style="padding: 6px 10px; font-size: 14px; cursor: pointer; border: 1px solid #aaa; border-radius: 4px;"
+      />
+    </div>
+
+  </div>
+
+  <!-- time.js loaded at end of body so DOM is ready -->
+  <script src="time.js"></script>
+  <script>
+    // Attach calendar opener via addEventListener — no inline onclick handlers.
+    document.querySelectorAll('.timejs-input').forEach(function (input) {
+      input.addEventListener('click', function () {
+        openCalendar(this.id);
+      });
+    });
+  </script>
+
 </body>
 </html>
