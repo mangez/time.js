@@ -4,43 +4,170 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>time.js — Date Picker Demo</title>
-  <meta name="description" content="Demo page for the time.js lightweight vanilla JS date-picker widget." />
+  <meta name="description" content="Demo for the time.js modern lightweight vanilla JS date-picker widget." />
   <link rel="stylesheet" href="time.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 48px 56px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .demo-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6366f1;
+      margin-bottom: 8px;
+    }
+
+    .demo-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 6px;
+    }
+
+    .demo-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0 0 36px;
+      line-height: 1.5;
+    }
+
+    .field-group {
+      margin-bottom: 28px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .field-hint {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .selected-output {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #166534;
+      display: none;
+    }
+
+    .selected-output.visible {
+      display: block;
+    }
+
+    .selected-output strong {
+      font-weight: 700;
+    }
+
+    .demo-features {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .demo-features h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      margin: 0 0 12px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+
+    .feature-list li {
+      font-size: 13px;
+      color: #4b5563;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-list li::before {
+      content: '✓';
+      color: #6366f1;
+      font-weight: 700;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
 
-  <h1 style="font-family: sans-serif; margin: 40px 0 10px 40px;">time.js — Date Picker Demo</h1>
+  <div class="demo-card">
 
-  <div style="font-family: sans-serif; margin: 0 40px; display: flex; gap: 40px; flex-wrap: wrap;">
+    <div class="demo-logo">time.js</div>
+    <h1 class="demo-title">Date Picker Demo</h1>
+    <p class="demo-subtitle">
+      Lightweight vanilla JS calendar widget. Click the field below to open the picker.
+    </p>
 
-    <!-- Date picker 1 -->
-    <div>
-      <label for="date1" style="display: block; margin-bottom: 6px; font-size: 14px;">
-        Pick a date (field 1)
-      </label>
+    <div class="field-group">
+      <label class="field-label" for="date-input">Select a Date</label>
       <input
         type="text"
-        id="date1"
+        id="date-input"
         class="timejs-input"
         placeholder="DD-Mon-YYYY"
         readonly
-        style="padding: 6px 10px; font-size: 14px; cursor: pointer; border: 1px solid #aaa; border-radius: 4px;"
+        aria-label="Date picker — click to open calendar"
       />
+      <p class="field-hint">Click the field to open the calendar &bull; Press <kbd>Esc</kbd> to close</p>
     </div>
 
-    <!-- Date picker 2 — demonstrates that two pickers work independently -->
-    <div>
-      <label for="date2" style="display: block; margin-bottom: 6px; font-size: 14px;">
-        Pick a date (field 2)
-      </label>
-      <input
-        type="text"
-        id="date2"
-        class="timejs-input"
-        placeholder="DD-Mon-YYYY"
-        readonly
-        style="padding: 6px 10px; font-size: 14px; cursor: pointer; border: 1px solid #aaa; border-radius: 4px;"
-      />
+    <div class="selected-output" id="output-box">
+      You selected: <strong id="output-text"></strong>
+    </div>
+
+    <div class="demo-features">
+      <h3>Features</h3>
+      <ul class="feature-list">
+        <li>Month &amp; year jump</li>
+        <li>Today button</li>
+        <li>Clear button</li>
+        <li>Fade-in animation</li>
+        <li>Highlights today</li>
+        <li>Shows selection</li>
+        <li>Esc to close</li>
+        <li>Zero dependencies</li>
+      </ul>
     </div>
 
   </div>
@@ -48,11 +175,24 @@
   <!-- time.js loaded at end of body so DOM is ready -->
   <script src="time.js"></script>
   <script>
-    // Attach calendar opener via addEventListener — no inline onclick handlers.
-    document.querySelectorAll('.timejs-input').forEach(function (input) {
-      input.addEventListener('click', function () {
-        openCalendar(this.id);
-      });
+    'use strict';
+    var input = document.getElementById('date-input');
+    var outputBox = document.getElementById('output-box');
+    var outputText = document.getElementById('output-text');
+
+    // Open calendar on click
+    input.addEventListener('click', function () {
+      openCalendar('date-input');
+    });
+
+    // Show selected value below the input
+    input.addEventListener('change', function () {
+      if (this.value) {
+        outputText.textContent = this.value;
+        outputBox.classList.add('visible');
+      } else {
+        outputBox.classList.remove('visible');
+      }
     });
   </script>
 
