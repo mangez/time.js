@@ -1,117 +1,273 @@
 /* ==========================================================================
-   time.js — Calendar widget styles
+   time.js — Modern Calendar Widget Styles
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Calendar container
+   CSS Custom Properties (easy theming)
    -------------------------------------------------------------------------- */
-
-.calendar-container {
-  position: absolute;    /* Enables z-index to stack above other content */
-  z-index: 101;
-  display: none;         /* Hidden by default; shown via JS */
-  min-width: 210px;      /* Wide enough for a 7-column calendar grid */
-  border: 1px solid #c5bebe;
-  background-color: #dbe1e2;
-  box-shadow: 4px 4px 0 #56565633;
-  border-radius: 6px;
-  overflow: hidden;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+:root {
+  --timejs-accent:      #4f46e5;   /* indigo-600 */
+  --timejs-accent-dark: #3730a3;   /* indigo-800 */
+  --timejs-today-bg:    #6366f1;   /* indigo-500 */
+  --timejs-selected-bg: #4f46e5;
+  --timejs-hover-bg:    #e0e7ff;   /* indigo-100 */
+  --timejs-hover-text:  #3730a3;
+  --timejs-sunday:      #ef4444;   /* red-500 */
+  --timejs-radius:      12px;
+  --timejs-shadow:      0 10px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  --timejs-font:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --timejs-bg:          #ffffff;
+  --timejs-border:      #e5e7eb;
+  --timejs-header-bg:   #4f46e5;
+  --timejs-header-text: #ffffff;
+  --timejs-footer-bg:   #f9fafb;
 }
 
 /* --------------------------------------------------------------------------
-   Caption / header row (month name + navigation arrows)
+   Container (floats over the page, positioned by JS)
    -------------------------------------------------------------------------- */
+.timejs-container {
+  position: absolute;
+  z-index: 9999;
+  display: none;
+  width: 300px;
+  background: var(--timejs-bg);
+  border: 1px solid var(--timejs-border);
+  border-radius: var(--timejs-radius);
+  box-shadow: var(--timejs-shadow);
+  font-family: var(--timejs-font);
+  overflow: hidden;
+  /* Fade-in animation */
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
 
-.calendar-caption {
+.timejs-container.timejs-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Header: nav arrows + month/year selects
+   -------------------------------------------------------------------------- */
+.timejs-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
-  font-size: 14px;
-  font-weight: 600;
-  background-color: #cdd4d6;
-  border-bottom: 1px solid #c5bebe;
-  text-align: center;
+  padding: 10px 12px;
+  background: var(--timejs-header-bg);
   user-select: none;
 }
 
-/* --------------------------------------------------------------------------
-   Navigation arrows
-   -------------------------------------------------------------------------- */
+.timejs-header-selects {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
 
-.nav-arrow {
-  display: inline-block;
-  padding: 2px 6px;
+.timejs-month-select,
+.timejs-year-select {
+  background: rgba(255,255,255,0.15);
+  color: var(--timejs-header-text);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--timejs-font);
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 1;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  outline: none;
+  transition: background 0.15s;
 }
 
-.nav-arrow:hover,
-.nav-arrow:focus {
-  background-color: #3e8e41;
-  color: #ffffff;
-  outline: 2px solid #2e6e31; /* Visible focus ring for keyboard users */
+.timejs-month-select:hover,
+.timejs-year-select:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.timejs-month-select option,
+.timejs-year-select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+/* Nav arrows (‹ and ›) */
+.timejs-nav {
+  background: rgba(255,255,255,0.15);
+  color: var(--timejs-header-text);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.timejs-nav:hover,
+.timejs-nav:focus {
+  background: rgba(255,255,255,0.30);
+  outline: 2px solid rgba(255,255,255,0.5);
 }
 
 /* --------------------------------------------------------------------------
-   Table layout
+   Calendar table
    -------------------------------------------------------------------------- */
-
-.calendar-table {
+.timejs-table {
   width: 100%;
   border-collapse: collapse;
+  padding: 8px 12px 4px;
+  display: table;
 }
 
-.calendar-table th,
-.calendar-table td {
+.timejs-table th {
   text-align: center;
-  padding: 4px 2px;
-  font-size: 12px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  min-width: 28px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 0 4px;
+  width: calc(100% / 7);
 }
 
-.calendar-table th {
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding-bottom: 6px;
+.timejs-sunday {
+  color: var(--timejs-sunday) !important;
+}
+
+.timejs-table td {
+  text-align: center;
+  padding: 0;
+  width: calc(100% / 7);
 }
 
 /* --------------------------------------------------------------------------
    Day cells
    -------------------------------------------------------------------------- */
-
-.calendar-table td[data-day] {
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.1s ease, color 0.1s ease;
-}
-
-.calendar-table td[data-day]:hover {
-  background-color: #3e8e41;
-  color: #ffffff;
-}
-
-/* Today's date highlight */
-.today {
-  background-color: #1c8e90;
-  color: #ffffff;         /* Contrast ratio ~4.6:1 vs #1c8e90 — passes WCAG AA */
+.timejs-day {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
   border-radius: 50%;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+.timejs-day:hover {
+  background: var(--timejs-hover-bg);
+  color: var(--timejs-hover-text);
+  transform: scale(1.12);
+}
+
+/* Today highlight */
+.timejs-today {
+  background: var(--timejs-today-bg);
+  color: #ffffff !important;
   font-weight: 700;
 }
 
-/* Sunday column */
-.sunday {
-  color: #cc0000;
+.timejs-today:hover {
+  background: var(--timejs-accent-dark);
+  color: #ffffff;
 }
 
-/* Empty padding cells at start of month */
-.calendar-table td:not([data-day]) {
+/* Selected date */
+.timejs-selected {
+  background: var(--timejs-selected-bg);
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.4);
+}
+
+.timejs-selected:hover {
+  background: var(--timejs-accent-dark);
+}
+
+/* Empty cells */
+.timejs-table td:not(.timejs-day) {
   cursor: default;
+}
+
+/* --------------------------------------------------------------------------
+   Footer: Today + Clear buttons
+   -------------------------------------------------------------------------- */
+.timejs-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px 10px;
+  background: var(--timejs-footer-bg);
+  border-top: 1px solid var(--timejs-border);
+}
+
+.timejs-btn {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--timejs-font);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.timejs-today-btn {
+  background: var(--timejs-accent);
+  color: #ffffff;
+  border-color: var(--timejs-accent);
+}
+
+.timejs-today-btn:hover,
+.timejs-today-btn:focus {
+  background: var(--timejs-accent-dark);
+  border-color: var(--timejs-accent-dark);
+  outline: none;
+}
+
+.timejs-clear-btn {
+  background: #ffffff;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.timejs-clear-btn:hover,
+.timejs-clear-btn:focus {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   Demo input style (used in index.html)
+   -------------------------------------------------------------------------- */
+.timejs-input {
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: var(--timejs-font);
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 220px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E") no-repeat right 12px center;
+  padding-right: 38px;
+}
+
+.timejs-input:focus,
+.timejs-input:hover {
+  border-color: var(--timejs-accent);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
 }
