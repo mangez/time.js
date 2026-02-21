@@ -1,5 +1,190 @@
 /* ==========================================================================
-   time.js — Calendar Widget Styles  (v3 — grid fix)
+   time.js — Calendar Widget Styles  (v3 — grid fix):root {
+  --tj-accent: #4f46e5;
+  --tj-accent-dark: #3730a3;
+  --tj-accent-light: #eef2ff;
+  --tj-today-bg: #6366f1;
+  --tj-sel-bg: #4f46e5;
+  --tj-hover-bg: #e0e7ff;
+  --tj-hover-fg: #3730a3;
+  --tj-sun: #ef4444;
+  --tj-shadow: 0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
+  --tj-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tj-radius: 14px;
+  --tj-w: 296px;
+  --tj-cell: 36px;
+}
+
+.timejs-container {
+  position: absolute;
+  z-index: 9999;
+  display: none;
+  width: var(--tj-w);
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--tj-radius);
+  box-shadow: var(--tj-shadow);
+  font-family: var(--tj-font);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.timejs-container.timejs-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.timejs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 10px;
+  background: var(--tj-accent);
+  user-select: none;
+}
+
+.timejs-header-selects {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.timejs-month-select, .timejs-year-select {
+  appearance: none;
+  background: rgba(255,255,255,0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23fff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 8px center;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 7px;
+  padding: 5px 26px 5px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--tj-font);
+  cursor: pointer;
+  outline: none;
+}
+
+.timejs-month-select { min-width: 112px; }
+.timejs-year-select { min-width: 70px; }
+
+.timejs-nav {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.timejs-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.timejs-grid-wrap { padding: 8px; }
+
+.timejs-table th {
+  height: 28px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.timejs-table td {
+  height: var(--tj-cell);
+  text-align: center;
+  padding: 2px 0;
+}
+
+.timejs-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tj-cell);
+  height: var(--tj-cell);
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.timejs-day:hover, .timejs-day:focus {
+  background: var(--tj-hover-bg);
+  color: var(--tj-hover-fg);
+  transform: scale(1.1);
+  outline: none;
+}
+
+.timejs-sunday { color: var(--tj-sun) !important; }
+
+.timejs-today {
+  background: var(--tj-today-bg) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.timejs-selected {
+  background: var(--tj-sel-bg) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.timejs-footer {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+}
+
+.timejs-btn {
+  flex: 1;
+  padding: 7px 0;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+
+.timejs-today-btn { background: var(--tj-accent); color: #fff; }
+.timejs-clear-btn { background: #fff; color: #6b7280; border-color: #e5e7eb; }
+
+.timejs-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 11px 14px;
+  font-size: 15px;
+  font-family: var(--tj-font);
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.timejs-input:hover { border-color: #c4b5fd; }
+.timejs-input.timejs-active { border-color: var(--tj-accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.14); }
+
+.field-hint { display: none; }
+.timejs-active ~ .field-hint { display: flex; }
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -284,3 +469,4 @@
   border-color: var(--tj-accent);
   box-shadow:   0 0 0 3px rgba(79,70,229,0.14);
 }
+
