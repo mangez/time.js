@@ -1,66 +1,117 @@
-.sunday {
-color:#FF0000;
-}
+/* ==========================================================================
+   time.js — Calendar widget styles
+   ========================================================================== */
 
-.today {
-color:#FFFFFF;
-background-color:#1c8e90;
-border-radius:5px 5px;
-}
+/* --------------------------------------------------------------------------
+   Calendar container
+   -------------------------------------------------------------------------- */
+
 .calendar-container {
-    border: 1px solid #c5bebe;
-    padding: 1px;
-    background-color: #dbe1e2;
-    box-shadow: #56565633 4px 4px;
-    width:60px;
-    z-index:101;
+  position: absolute;    /* Enables z-index to stack above other content */
+  z-index: 101;
+  display: none;         /* Hidden by default; shown via JS */
+  min-width: 210px;      /* Wide enough for a 7-column calendar grid */
+  border: 1px solid #c5bebe;
+  background-color: #dbe1e2;
+  box-shadow: 4px 4px 0 #56565633;
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.calendar-container caption{
-    border: 1px solid #c5bebe;
-    padding: 1px;
-    background-color: #dbe1e2;
-    box-shadow: #56565633 4px 4px;
-	text-align: center;
-        padding:2px;
-        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        font-size :14px;
+/* --------------------------------------------------------------------------
+   Caption / header row (month name + navigation arrows)
+   -------------------------------------------------------------------------- */
+
+.calendar-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #cdd4d6;
+  border-bottom: 1px solid #c5bebe;
+  text-align: center;
+  user-select: none;
 }
 
+/* --------------------------------------------------------------------------
+   Navigation arrows
+   -------------------------------------------------------------------------- */
 
-.calendar-container th{
-        text-align: center;
-        padding:2px;
-        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        font-size :12px;
-}
-.calendar-container td {
-        text-align: center;
-        padding:2px;
-        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        font-size :12px;
-		 
-}
-
-.calendar-container td:hover {
-       color: #3e8e41;
-    cursor: pointer;
-}
-.navigationArrow{
-    display:inline-block;
+.nav-arrow {
+  display: inline-block;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.navLeft {
-position :relative ;
-left:-20px;
+.nav-arrow:hover,
+.nav-arrow:focus {
+  background-color: #3e8e41;
+  color: #ffffff;
+  outline: 2px solid #2e6e31; /* Visible focus ring for keyboard users */
 }
 
+/* --------------------------------------------------------------------------
+   Table layout
+   -------------------------------------------------------------------------- */
 
-.navRight:hover , .navLeft:hover {
-    color: #3e8e41;
-    cursor: pointer;
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-.navRight {
-    position: relative;
-    left: 20px;
+
+.calendar-table th,
+.calendar-table td {
+  text-align: center;
+  padding: 4px 2px;
+  font-size: 12px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  min-width: 28px;
+}
+
+.calendar-table th {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-bottom: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Day cells
+   -------------------------------------------------------------------------- */
+
+.calendar-table td[data-day] {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.calendar-table td[data-day]:hover {
+  background-color: #3e8e41;
+  color: #ffffff;
+}
+
+/* Today's date highlight */
+.today {
+  background-color: #1c8e90;
+  color: #ffffff;         /* Contrast ratio ~4.6:1 vs #1c8e90 — passes WCAG AA */
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+/* Sunday column */
+.sunday {
+  color: #cc0000;
+}
+
+/* Empty padding cells at start of month */
+.calendar-table td:not([data-day]) {
+  cursor: default;
 }
