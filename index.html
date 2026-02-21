@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>time.js — Date Picker Demo</title>
-  <meta name="description" content="Demo for the time.js modern lightweight vanilla JS date-picker widget." />
-  <link rel="stylesheet" href="time.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>time.js - Date Picker Demo</title>
+  <link rel="stylesheet" href="time.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #eef2ff 0%, #f3f4f6 60%, #fdf4ff 100%);
@@ -18,247 +16,80 @@
       justify-content: center;
       padding: 24px 16px;
     }
-
-    /* ---- card ---- */
     .demo-card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 60px rgba(79,70,229,0.10);
-      padding: 40px 44px 36px;
+      box-shadow: 0 20px 60px rgba(79,70,229,0.10);
+      padding: 40px;
       max-width: 460px;
       width: 100%;
       border: 1px solid rgba(79,70,229,0.08);
     }
-
-    /* ---- header ---- */
-    .demo-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #eef2ff;
-      color: #4f46e5;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-bottom: 14px;
-    }
-    .demo-badge svg { flex-shrink: 0; }
-
-    .demo-title {
-      font-size: 28px;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.2;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .demo-subtitle {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    /* ---- field ---- */
-    .field-wrap {
-      margin-bottom: 20px;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 8px;
-      letter-spacing: 0.01em;
-    }
-
-    .field-hint {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    kbd {
-      display: inline-block;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      padding: 1px 5px;
-      font-size: 11px;
-      font-family: inherit;
-      color: #475569;
-    }
-
-    /* ---- selection output ---- */
-    .output-box {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: #f0fdf4;
-      border: 1.5px solid #86efac;
-      border-radius: 10px;
-      font-size: 14px;
-      color: #166534;
-      animation: slideIn 0.2s ease;
-    }
-    .output-box.visible { display: flex; }
-    .output-box svg { flex-shrink: 0; color: #16a34a; }
-    .output-box strong { font-weight: 700; }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ---- divider ---- */
-    .demo-divider {
-      border: none;
-      border-top: 1px solid #f1f5f9;
-      margin: 28px 0 20px;
-    }
-
-    /* ---- features grid ---- */
-    .features-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #94a3b8;
-      margin-bottom: 14px;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 16px;
-      list-style: none;
-    }
-
-    .feature-grid li {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 13px;
-      color: #475569;
-      font-weight: 500;
-    }
-
-    .feature-grid li::before {
-      content: '';
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      background: #4f46e5;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 4l2.5 2.5L9 1'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
-    /* ---- footer link ---- */
-    .demo-footer {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-    .demo-footer a {
-      color: #4f46e5;
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .demo-title { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .demo-subtitle { font-size: 14px; color: #64748b; margin-bottom: 28px; }
+    .field-wrap { margin-bottom: 16px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+    .field-hint { margin-top: 8px; font-size: 12px; color: #94a3b8; display: none; align-items: center; gap: 5px; }
+    kbd { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+    .output-box { display: none; margin-top: 16px; padding: 12px 16px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; color: #166534; font-size: 14px; }
+    .output-box.visible { display: block; }
+    .demo-footer { margin-top: 24px; text-align: center; font-size: 13px; }
+    .demo-footer a { color: #4f46e5; text-decoration: none; font-weight: 600; }
     .demo-footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-
   <div class="demo-card">
-
-    <!-- Header -->
-    <div class="demo-badge">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      time.js
-    </div>
     <h1 class="demo-title">Date Picker Demo</h1>
-    <p class="demo-subtitle">Lightweight vanilla JS calendar widget — zero dependencies, no build step.</p>
+    <p class="demo-subtitle">Lightweight vanilla JS calendar widget - zero dependencies, no build step.</p>
 
-    <!-- Input -->
     <div class="field-wrap">
       <label class="field-label" for="date-input">Select a Date</label>
-      <input
-        type="text"
-        id="date-input"
-        class="timejs-input"
-        placeholder="Click to pick a date…"
-        readonly
-        aria-label="Date picker — click to open calendar"
-        autocomplete="off"
-      />
-      <p class="field-hint">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
-        Click the field &bull; Use <kbd>Esc</kbd> to close
-      </p>
+      <input type="text" id="date-input" class="timejs-input" placeholder="Click to pick a date..." readonly aria-label="Date picker - click to open calendar" autocomplete="off">
+      <div class="field-hint" id="date-hint">
+        <span>Click the field</span> <kbd>Esc</kbd> <span>to close</span>
+      </div>
     </div>
 
-    <!-- Selected output -->
-    <div class="output-box" id="output-box" role="status" aria-live="polite">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Selected: <strong id="output-text"></strong></span>
+    <div id="output-box" class="output-box">
+      Selected: <strong id="output-text"></strong>
     </div>
 
-    <!-- Features -->
-    <hr class="demo-divider" />
-    <p class="features-label">Features</p>
-    <ul class="feature-grid">
-      <li>Month &amp; year jump</li>
-      <li>Today shortcut</li>
-      <li>Clear button</li>
-      <li>Fade animation</li>
-      <li>Highlights today</li>
-      <li>Selected state</li>
-      <li>Esc to close</li>
-      <li>Zero dependencies</li>
-    </ul>
-
-    <!-- Footer -->
-    <p class="demo-footer">
+    <div class="demo-footer">
       <a href="https://github.com/mangez/time.js" target="_blank" rel="noopener">View on GitHub</a>
-    </p>
-
+    </div>
   </div>
 
   <script src="time.js"></script>
   <script>
     'use strict';
-    var input      = document.getElementById('date-input');
-    var outputBox  = document.getElementById('output-box');
+    var input = document.getElementById('date-input');
+    var outputBox = document.getElementById('output-box');
     var outputText = document.getElementById('output-text');
+    var hint = document.getElementById('date-hint');
 
-    input.addEventListener('click', function () {
+    input.addEventListener('click', function() {
       openCalendar('date-input');
+      hint.style.display = 'flex';
     });
 
-    input.addEventListener('change', function () {
+    input.addEventListener('change', function() {
       if (this.value) {
         outputText.textContent = this.value;
         outputBox.classList.add('visible');
       } else {
         outputBox.classList.remove('visible');
       }
+      hint.style.display = 'none';
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') hint.style.display = 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target)) hint.style.display = 'none';
     });
   </script>
-
 </body>
 </html>
-
