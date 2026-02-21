@@ -4,41 +4,34 @@
  * License: MIT
  *
  * Features:
- *  - Modern card-style UI with smooth animations
- *  - Month/Year quick-jump dropdowns
- *  - "Today" button jumps to current date
- *  - "Clear" button resets the input
- *  - Hover tooltips on day cells
- *  - Positions itself below the triggering input
- *  - Closes on outside click or Escape key
- *  - Fires native 'change' event on selection
- *  - Zero dependencies, no build step
+ * - Modern card-style UI with smooth animations
+ * - Month/Year quick-jump dropdowns
+ * - "Today" button jumps to current date
+ * - "Clear" button resets the input
+ * - Hover tooltips on day cells
+ * - Positions itself below the triggering input
+ * - Closes on outside click or Escape key
+ * - Fires native 'change' event on selection
+ * - Zero dependencies, no build step
  */
-
 'use strict';
-
 (function (global) {
-
   // -------------------------------------------------------------------------
   // Constants
   // -------------------------------------------------------------------------
-
   const MONTH_NAMES_SHORT = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
-
   const MONTH_NAMES_FULL = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-
   const DAY_HEADERS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   // -------------------------------------------------------------------------
   // Public API
   // -------------------------------------------------------------------------
-
   /**
    * Open (or reposition) the calendar picker for the given input element.
    * @param {string} controlId - The id of the <input> element to populate.
@@ -49,14 +42,11 @@
       console.error('time.js: element with id "' + controlId + '" not found.');
       return;
     }
-
     const container = _getOrCreateContainer();
     container.dataset.controlId = controlId;
-
     // Parse existing value if present, else use today
     let startDate = _parseInputValue(input.value) || new Date();
     _renderCalendar(container, startDate, startDate);
-
     // Position below the input field
     _positionBelow(container, input);
     container.classList.add('timejs-open');
@@ -68,28 +58,26 @@
   // -------------------------------------------------------------------------
   // Rendering
   // -------------------------------------------------------------------------
-
   /**
    * Build and inject the full calendar HTML into the container.
+   * FIX: .timejs-day class is on an inner <span> inside <td>,
+   *      NOT on the <td> itself, so table-layout is preserved.
    * @param {HTMLElement} container
-   * @param {Date} viewDate   - The month being shown
+   * @param {Date} viewDate - The month being shown
    * @param {Date} selectedDate - Currently selected date (or today)
    */
   function _renderCalendar(container, viewDate, selectedDate) {
     const month = viewDate.getMonth();
     const year  = viewDate.getFullYear();
-
     const today = new Date();
     const todayDay   = today.getDate();
     const todayMonth = today.getMonth();
     const todayYear  = today.getFullYear();
-
     const firstWeekday = new Date(year, month, 1).getDay();
     const totalDays    = new Date(year, month + 1, 0).getDate();
-
-    const selDay   = selectedDate ? selectedDate.getDate()   : -1;
-    const selMonth = selectedDate ? selectedDate.getMonth()  : -1;
-    const selYear  = selectedDate ? selectedDate.getFullYear(): -1;
+    const selDay   = selectedDate ? selectedDate.getDate()     : -1;
+    const selMonth = selectedDate ? selectedDate.getMonth()    : -1;
+    const selYear  = selectedDate ? selectedDate.getFullYear() : -1;
 
     // -- Header: month dropdown + year dropdown + nav arrows --
     let monthOptions = MONTH_NAMES_FULL.map(function (name, i) {
@@ -107,9 +95,12 @@
     }).join('') + '</tr>';
 
     // -- Day cells --
+    // KEY FIX: Each <td> is a plain table cell.
+    // The clickable circle is an inner <span class="timejs-day">.
+    // This preserves table-layout:fixed grid alignment.
     let rows = '';
     let dayCounter = 0;
-    let padding = firstWeekday;
+    let padding    = firstWeekday;
 
     for (let row = 0; row < 6 && dayCounter < totalDays; row++) {
       rows += '<tr>';
@@ -121,12 +112,14 @@
           padding--;
         } else {
           dayCounter++;
-          let cls = [];
-          if (col === 0) cls.push('timejs-sunday');
-          if (dayCounter === todayDay && month === todayMonth && year === todayYear) cls.push('timejs-today');
-          if (dayCounter === selDay && month === selMonth && year === selYear) cls.push('timejs-selected');
-          rows += '<td class="timejs-day ' + cls.join(' ') + '" data-day="' + dayCounter + '" title="' +
-            dayCounter + ' ' + MONTH_NAMES_FULL[month] + ' ' + year + '">' + dayCounter + '</td>';
+          let cls = ['timejs-day'];
+          if (col === 0)                                                              cls.push('timejs-sunday');
+          if (dayCounter === todayDay && month === todayMonth && year === todayYear)  cls.push('timejs-today');
+          if (dayCounter === selDay   && month === selMonth   && year === selYear)    cls.push('timejs-selected');
+          const label = dayCounter + ' ' + MONTH_NAMES_FULL[month] + ' ' + year;
+          rows += '<td data-day="' + dayCounter + '"><span class="' + cls.join(' ') +
+                  '" data-day="' + dayCounter + '" title="' + label + '">' +
+                  dayCounter + '</span></td>';
         }
       }
       rows += '</tr>';
@@ -148,24 +141,21 @@
       '</div>';
 
     container.style.display = 'block';
-
     _attachEvents(container, viewDate, selectedDate);
   }
 
   // -------------------------------------------------------------------------
   // Events
   // -------------------------------------------------------------------------
-
   /**
    * Attach event listeners to the rendered calendar.
    */
   function _attachEvents(container, viewDate, selectedDate) {
-
     // Prev / Next month navigation
     container.querySelectorAll('.timejs-nav').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
-        const dir = parseInt(btn.dataset.dir, 10);
+        const dir     = parseInt(btn.dataset.dir, 10);
         const newView = _addMonths(viewDate, dir);
         _renderCalendar(container, newView, selectedDate);
       });
@@ -176,31 +166,26 @@
       sel.addEventListener('change', function (e) {
         e.stopPropagation();
         const newMonth = parseInt(container.querySelector('.timejs-month-select').value, 10);
-        const newYear  = parseInt(container.querySelector('.timejs-year-select').value, 10);
+        const newYear  = parseInt(container.querySelector('.timejs-year-select').value,  10);
         const newView  = new Date(newYear, newMonth, 1);
         _renderCalendar(container, newView, selectedDate);
       });
     });
 
-    // Day cell click
+    // Day span click — target .timejs-day span inside <td>
     container.querySelector('.timejs-table').addEventListener('click', function (e) {
-      const td = e.target.closest('.timejs-day');
-      if (!td || !td.dataset.day) return;
+      const span = e.target.closest('.timejs-day');
+      if (!span || !span.dataset.day) return;
       e.stopPropagation();
-
-      const day   = parseInt(td.dataset.day, 10);
+      const day   = parseInt(span.dataset.day, 10);
       const month = viewDate.getMonth();
       const year  = viewDate.getFullYear();
-      const pickedDate = new Date(year, month, day);
-
       const input = document.getElementById(container.dataset.controlId);
       if (!input) return;
-
       // Format: DD-Mon-YYYY (e.g. 21-Feb-2026)
       const formatted = _pad(day) + '-' + MONTH_NAMES_SHORT[month] + '-' + year;
       input.value = formatted;
       input.dispatchEvent(new Event('change', { bubbles: true }));
-
       _closeCalendar(container);
     });
 
@@ -226,12 +211,11 @@
   // -------------------------------------------------------------------------
   // Container management
   // -------------------------------------------------------------------------
-
   function _getOrCreateContainer() {
     let container = document.getElementById('timejs-container');
     if (!container) {
       container = document.createElement('div');
-      container.id = 'timejs-container';
+      container.id        = 'timejs-container';
       container.className = 'timejs-container';
       document.body.appendChild(container);
 
@@ -254,25 +238,24 @@
     container.classList.remove('timejs-open');
     setTimeout(function () {
       container.style.display = 'none';
-      container.innerHTML = '';
+      container.innerHTML     = '';
     }, 180);
   }
 
   // -------------------------------------------------------------------------
   // Helpers
   // -------------------------------------------------------------------------
-
   /**
    * Position the calendar directly below the given input element.
    * @param {HTMLElement} container
    * @param {HTMLElement} input
    */
   function _positionBelow(container, input) {
-    const rect = input.getBoundingClientRect();
-    const scrollTop  = window.scrollY || document.documentElement.scrollTop;
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    const rect       = input.getBoundingClientRect();
+    const scrollTop  = window.scrollY  || document.documentElement.scrollTop;
+    const scrollLeft = window.scrollX  || document.documentElement.scrollLeft;
     container.style.top  = (rect.bottom + scrollTop  + 4) + 'px';
-    container.style.left = (rect.left   + scrollLeft) + 'px';
+    container.style.left = (rect.left   + scrollLeft)     + 'px';
   }
 
   /**
@@ -282,7 +265,7 @@
    * @returns {Date}
    */
   function _addMonths(date, delta) {
-    const result = new Date(date.getFullYear(), date.getMonth() + delta, 1);
+    const result  = new Date(date.getFullYear(), date.getMonth() + delta, 1);
     const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
     result.setDate(Math.min(date.getDate(), lastDay));
     return result;
