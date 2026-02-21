@@ -1,273 +1,279 @@
 /* ==========================================================================
-   time.js — Modern Calendar Widget Styles
+   time.js — Calendar Widget Styles  (v2 — layout fix + UI polish)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   CSS Custom Properties (easy theming)
+   Design tokens
    -------------------------------------------------------------------------- */
 :root {
-  --timejs-accent:      #4f46e5;   /* indigo-600 */
-  --timejs-accent-dark: #3730a3;   /* indigo-800 */
-  --timejs-today-bg:    #6366f1;   /* indigo-500 */
-  --timejs-selected-bg: #4f46e5;
-  --timejs-hover-bg:    #e0e7ff;   /* indigo-100 */
-  --timejs-hover-text:  #3730a3;
-  --timejs-sunday:      #ef4444;   /* red-500 */
-  --timejs-radius:      12px;
-  --timejs-shadow:      0 10px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
-  --timejs-font:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --timejs-bg:          #ffffff;
-  --timejs-border:      #e5e7eb;
-  --timejs-header-bg:   #4f46e5;
-  --timejs-header-text: #ffffff;
-  --timejs-footer-bg:   #f9fafb;
+  --tj-accent:       #4f46e5;
+  --tj-accent-dark:  #3730a3;
+  --tj-accent-light: #eef2ff;
+  --tj-today-bg:     #6366f1;
+  --tj-sel-bg:       #4f46e5;
+  --tj-hover-bg:     #e0e7ff;
+  --tj-hover-fg:     #3730a3;
+  --tj-sun:          #ef4444;
+  --tj-shadow:       0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
+  --tj-font:         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tj-radius:       14px;
+  --tj-w:            296px;    /* total picker width */
+  --tj-cell:         36px;     /* day cell size      */
 }
 
 /* --------------------------------------------------------------------------
-   Container (floats over the page, positioned by JS)
+   Outer container — floats above page, positioned by JS
    -------------------------------------------------------------------------- */
 .timejs-container {
-  position: absolute;
-  z-index: 9999;
-  display: none;
-  width: 300px;
-  background: var(--timejs-bg);
-  border: 1px solid var(--timejs-border);
-  border-radius: var(--timejs-radius);
-  box-shadow: var(--timejs-shadow);
-  font-family: var(--timejs-font);
-  overflow: hidden;
-  /* Fade-in animation */
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  position:     absolute;
+  z-index:      9999;
+  display:      none;
+  width:        var(--tj-w);
+  background:   #fff;
+  border:       1px solid #e0e0e0;
+  border-radius: var(--tj-radius);
+  box-shadow:   var(--tj-shadow);
+  font-family:  var(--tj-font);
+  overflow:     hidden;
+  /* open animation */
+  opacity:      0;
+  transform:    translateY(-8px) scale(0.98);
+  transition:   opacity 0.2s ease, transform 0.2s ease;
 }
-
 .timejs-container.timejs-open {
-  opacity: 1;
-  transform: translateY(0);
+  opacity:   1;
+  transform: translateY(0) scale(1);
 }
 
 /* --------------------------------------------------------------------------
-   Header: nav arrows + month/year selects
+   Header bar
    -------------------------------------------------------------------------- */
 .timejs-header {
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: space-between;
-  padding: 10px 12px;
-  background: var(--timejs-header-bg);
-  user-select: none;
+  gap:             6px;
+  padding:         10px 10px 10px 10px;
+  background:      var(--tj-accent);
+  user-select:     none;
 }
 
 .timejs-header-selects {
-  display: flex;
-  gap: 6px;
+  display:     flex;
+  gap:         6px;
   align-items: center;
+  flex:        1;
+  justify-content: center;
 }
 
+/* Month & year dropdowns */
 .timejs-month-select,
 .timejs-year-select {
-  background: rgba(255,255,255,0.15);
-  color: var(--timejs-header-text);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 6px;
-  padding: 3px 6px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--timejs-font);
-  cursor: pointer;
-  outline: none;
-  transition: background 0.15s;
+  appearance:    none;
+  -webkit-appearance: none;
+  background:    rgba(255,255,255,0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23fff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 8px center;
+  color:         #fff;
+  border:        1px solid rgba(255,255,255,0.35);
+  border-radius: 7px;
+  padding:       5px 26px 5px 10px;
+  font-size:     13px;
+  font-weight:   600;
+  font-family:   var(--tj-font);
+  cursor:        pointer;
+  outline:       none;
+  transition:    background 0.15s;
 }
-
+.timejs-month-select { min-width: 112px; }
+.timejs-year-select  { min-width: 70px;  }
 .timejs-month-select:hover,
-.timejs-year-select:hover {
-  background: rgba(255,255,255,0.25);
-}
-
+.timejs-year-select:hover  { background-color: rgba(255,255,255,0.28); }
 .timejs-month-select option,
-.timejs-year-select option {
-  background: #ffffff;
-  color: #111827;
-}
+.timejs-year-select  option { background: #fff; color: #111; }
 
-/* Nav arrows (‹ and ›) */
+/* Nav arrows ‹ › */
 .timejs-nav {
-  background: rgba(255,255,255,0.15);
-  color: var(--timejs-header-text);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
+  flex-shrink:     0;
+  width:           30px;
+  height:          30px;
+  background:      rgba(255,255,255,0.18);
+  color:           #fff;
+  border:          1px solid rgba(255,255,255,0.35);
+  border-radius:   7px;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 20px;
-  line-height: 1;
-  transition: background 0.15s;
+  cursor:          pointer;
+  font-size:       22px;
+  line-height:     1;
+  transition:      background 0.15s;
 }
-
 .timejs-nav:hover,
 .timejs-nav:focus {
-  background: rgba(255,255,255,0.30);
-  outline: 2px solid rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.32);
+  outline:    2px solid rgba(255,255,255,0.5);
 }
 
 /* --------------------------------------------------------------------------
-   Calendar table
+   Calendar table  — THE GRID FIX
+   The key: table-layout:fixed + fixed width = equal columns guaranteed.
+   Each <td> uses flexbox to centre the circular day button.
    -------------------------------------------------------------------------- */
 .timejs-table {
-  width: 100%;
-  border-collapse: collapse;
-  padding: 8px 12px 4px;
-  display: table;
+  width:            var(--tj-w);
+  table-layout:     fixed;        /* ← forces equal column widths */
+  border-collapse:  separate;
+  border-spacing:   0;
+  padding:          6px 8px 4px;
+  box-sizing:       border-box;
 }
 
-.timejs-table th {
-  text-align: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: #9ca3af;
+/* Day-of-week headers */
+.timejs-table thead th {
+  width:          calc(var(--tj-w) / 7);
+  height:         28px;
+  text-align:     center;
+  font-size:      10px;
+  font-weight:    700;
+  color:          #9ca3af;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 6px 0 4px;
-  width: calc(100% / 7);
+  letter-spacing: 0.06em;
+  padding:        4px 0;
 }
 
-.timejs-sunday {
-  color: var(--timejs-sunday) !important;
+/* All body cells */
+.timejs-table tbody td {
+  width:          calc(var(--tj-w) / 7);
+  height:         var(--tj-cell);
+  text-align:     center;
+  vertical-align: middle;
+  padding:        2px 0;
 }
 
-.timejs-table td {
-  text-align: center;
-  padding: 0;
-  width: calc(100% / 7);
-}
+/* Sunday column colour */
+.timejs-sunday { color: var(--tj-sun) !important; }
 
 /* --------------------------------------------------------------------------
-   Day cells
+   Day cells — the circular clickable number
    -------------------------------------------------------------------------- */
 .timejs-day {
-  display: inline-block;
-  width: 34px;
-  height: 34px;
-  line-height: 34px;
-  border-radius: 50%;
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
-  cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease, transform 0.1s ease;
-  user-select: none;
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  width:           var(--tj-cell);
+  height:          var(--tj-cell);
+  border-radius:   50%;
+  font-size:       13px;
+  font-weight:     500;
+  color:           #374151;
+  cursor:          pointer;
+  transition:      background 0.1s, color 0.1s, transform 0.1s;
+  user-select:     none;
 }
-
 .timejs-day:hover {
-  background: var(--timejs-hover-bg);
-  color: var(--timejs-hover-text);
-  transform: scale(1.12);
+  background: var(--tj-hover-bg);
+  color:      var(--tj-hover-fg);
+  transform:  scale(1.15);
 }
 
-/* Today highlight */
+/* Today */
 .timejs-today {
-  background: var(--timejs-today-bg);
-  color: #ffffff !important;
-  font-weight: 700;
+  background:  var(--tj-today-bg) !important;
+  color:       #fff !important;
+  font-weight: 800;
+  box-shadow:  0 2px 6px rgba(99,102,241,0.4);
 }
+.timejs-today:hover { background: var(--tj-accent-dark) !important; }
 
-.timejs-today:hover {
-  background: var(--timejs-accent-dark);
-  color: #ffffff;
-}
-
-/* Selected date */
+/* Selected */
 .timejs-selected {
-  background: var(--timejs-selected-bg);
-  color: #ffffff !important;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(79,70,229,0.4);
+  background:  var(--tj-sel-bg) !important;
+  color:       #fff !important;
+  font-weight: 800;
+  box-shadow:  0 2px 10px rgba(79,70,229,0.45);
+}
+.timejs-selected:hover { background: var(--tj-accent-dark) !important; }
+
+/* Today + Selected on same day */
+.timejs-today.timejs-selected {
+  background:  var(--tj-accent-dark) !important;
+  box-shadow:  0 2px 10px rgba(55,48,163,0.5);
 }
 
-.timejs-selected:hover {
-  background: var(--timejs-accent-dark);
-}
-
-/* Empty cells */
-.timejs-table td:not(.timejs-day) {
-  cursor: default;
-}
+/* Empty/padding cells */
+.timejs-table tbody td:not(:has(.timejs-day)) { cursor: default; }
 
 /* --------------------------------------------------------------------------
-   Footer: Today + Clear buttons
+   Footer — Today / Clear
    -------------------------------------------------------------------------- */
 .timejs-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 8px 12px 10px;
-  background: var(--timejs-footer-bg);
-  border-top: 1px solid var(--timejs-border);
+  display:         flex;
+  gap:             8px;
+  padding:         8px 12px 12px;
+  background:      #fafafa;
+  border-top:      1px solid #f0f0f0;
 }
 
 .timejs-btn {
-  flex: 1;
-  padding: 6px 0;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: var(--timejs-font);
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex:          1;
+  padding:       7px 0;
+  border-radius: 8px;
+  font-size:     12px;
+  font-weight:   700;
+  font-family:   var(--tj-font);
+  cursor:        pointer;
+  border:        1.5px solid transparent;
+  transition:    background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.02em;
 }
 
 .timejs-today-btn {
-  background: var(--timejs-accent);
-  color: #ffffff;
-  border-color: var(--timejs-accent);
+  background:   var(--tj-accent);
+  color:        #fff;
+  border-color: var(--tj-accent);
 }
-
 .timejs-today-btn:hover,
 .timejs-today-btn:focus {
-  background: var(--timejs-accent-dark);
-  border-color: var(--timejs-accent-dark);
-  outline: none;
+  background:   var(--tj-accent-dark);
+  border-color: var(--tj-accent-dark);
+  box-shadow:   0 2px 8px rgba(79,70,229,0.35);
+  outline:      none;
 }
 
 .timejs-clear-btn {
-  background: #ffffff;
-  color: #6b7280;
-  border-color: #d1d5db;
+  background:   #fff;
+  color:        #6b7280;
+  border-color: #e5e7eb;
 }
-
 .timejs-clear-btn:hover,
 .timejs-clear-btn:focus {
-  background: #fee2e2;
-  color: #b91c1c;
+  background:   #fef2f2;
+  color:        #b91c1c;
   border-color: #fca5a5;
-  outline: none;
+  outline:      none;
 }
 
 /* --------------------------------------------------------------------------
-   Demo input style (used in index.html)
+   Input field (used in demo)
    -------------------------------------------------------------------------- */
 .timejs-input {
-  padding: 10px 14px;
-  font-size: 15px;
-  font-family: var(--timejs-font);
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 220px;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E") no-repeat right 12px center;
-  padding-right: 38px;
+  display:     block;
+  width:       280px;
+  padding:     11px 42px 11px 14px;
+  font-size:   15px;
+  font-family: var(--tj-font);
+  color:       #111827;
+  background:  #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%236b7280' stroke-width='1.5' viewBox='0 0 24 24'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E") no-repeat right 13px center;
+  border:      2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor:      pointer;
+  outline:     none;
+  transition:  border-color 0.15s, box-shadow 0.15s;
+  box-sizing:  border-box;
 }
-
+.timejs-input::placeholder { color: #9ca3af; }
+.timejs-input:hover  { border-color: #c4b5fd; }
 .timejs-input:focus,
-.timejs-input:hover {
-  border-color: var(--timejs-accent);
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+.timejs-input.timejs-active {
+  border-color: var(--tj-accent);
+  box-shadow:   0 0 0 3px rgba(79,70,229,0.14);
 }
