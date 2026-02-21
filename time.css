@@ -1,44 +1,44 @@
 /* ==========================================================================
-   time.js — Calendar Widget Styles  (v2 — layout fix + UI polish)
+   time.js — Calendar Widget Styles  (v3 — grid fix)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    Design tokens
    -------------------------------------------------------------------------- */
 :root {
-  --tj-accent:       #4f46e5;
-  --tj-accent-dark:  #3730a3;
-  --tj-accent-light: #eef2ff;
-  --tj-today-bg:     #6366f1;
-  --tj-sel-bg:       #4f46e5;
-  --tj-hover-bg:     #e0e7ff;
-  --tj-hover-fg:     #3730a3;
-  --tj-sun:          #ef4444;
-  --tj-shadow:       0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
-  --tj-font:         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --tj-radius:       14px;
-  --tj-w:            296px;    /* total picker width */
-  --tj-cell:         36px;     /* day cell size      */
+  --tj-accent:        #4f46e5;
+  --tj-accent-dark:   #3730a3;
+  --tj-accent-light:  #eef2ff;
+  --tj-today-bg:      #6366f1;
+  --tj-sel-bg:        #4f46e5;
+  --tj-hover-bg:      #e0e7ff;
+  --tj-hover-fg:      #3730a3;
+  --tj-sun:           #ef4444;
+  --tj-shadow:        0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
+  --tj-font:          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tj-radius:        14px;
+  --tj-w:             296px;  /* total picker width */
+  --tj-cell:          36px;   /* day cell size      */
 }
 
 /* --------------------------------------------------------------------------
    Outer container — floats above page, positioned by JS
    -------------------------------------------------------------------------- */
 .timejs-container {
-  position:     absolute;
-  z-index:      9999;
-  display:      none;
-  width:        var(--tj-w);
-  background:   #fff;
-  border:       1px solid #e0e0e0;
+  position: absolute;
+  z-index:  9999;
+  display:  none;
+  width:    var(--tj-w);
+  background:    #fff;
+  border:        1px solid #e0e0e0;
   border-radius: var(--tj-radius);
-  box-shadow:   var(--tj-shadow);
-  font-family:  var(--tj-font);
-  overflow:     hidden;
+  box-shadow:    var(--tj-shadow);
+  font-family:   var(--tj-font);
+  overflow: hidden;
   /* open animation */
-  opacity:      0;
-  transform:    translateY(-8px) scale(0.98);
-  transition:   opacity 0.2s ease, transform 0.2s ease;
+  opacity:    0;
+  transform:  translateY(-8px) scale(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .timejs-container.timejs-open {
   opacity:   1;
@@ -52,26 +52,27 @@
   display:         flex;
   align-items:     center;
   justify-content: space-between;
-  gap:             6px;
-  padding:         10px 10px 10px 10px;
-  background:      var(--tj-accent);
-  user-select:     none;
+  gap:     6px;
+  padding: 10px;
+  background:  var(--tj-accent);
+  user-select: none;
 }
-
 .timejs-header-selects {
-  display:     flex;
-  gap:         6px;
-  align-items: center;
-  flex:        1;
+  display:         flex;
+  gap:             6px;
+  align-items:     center;
+  flex:            1;
   justify-content: center;
 }
 
 /* Month & year dropdowns */
 .timejs-month-select,
 .timejs-year-select {
-  appearance:    none;
+  appearance: none;
   -webkit-appearance: none;
-  background:    rgba(255,255,255,0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23fff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 8px center;
+  background: rgba(255,255,255,0.18)
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23fff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E")
+              no-repeat right 8px center;
   color:         #fff;
   border:        1px solid rgba(255,255,255,0.35);
   border-radius: 7px;
@@ -79,9 +80,9 @@
   font-size:     13px;
   font-weight:   600;
   font-family:   var(--tj-font);
-  cursor:        pointer;
-  outline:       none;
-  transition:    background 0.15s;
+  cursor:  pointer;
+  outline: none;
+  transition: background 0.15s;
 }
 .timejs-month-select { min-width: 112px; }
 .timejs-year-select  { min-width: 70px;  }
@@ -92,20 +93,20 @@
 
 /* Nav arrows ‹ › */
 .timejs-nav {
-  flex-shrink:     0;
-  width:           30px;
-  height:          30px;
-  background:      rgba(255,255,255,0.18);
-  color:           #fff;
-  border:          1px solid rgba(255,255,255,0.35);
-  border-radius:   7px;
+  flex-shrink: 0;
+  width:  30px;
+  height: 30px;
+  background:    rgba(255,255,255,0.18);
+  color:         #fff;
+  border:        1px solid rgba(255,255,255,0.35);
+  border-radius: 7px;
   display:         flex;
   align-items:     center;
   justify-content: center;
-  cursor:          pointer;
-  font-size:       22px;
-  line-height:     1;
-  transition:      background 0.15s;
+  cursor:      pointer;
+  font-size:   22px;
+  line-height: 1;
+  transition: background 0.15s;
 }
 .timejs-nav:hover,
 .timejs-nav:focus {
@@ -114,30 +115,36 @@
 }
 
 /* --------------------------------------------------------------------------
-   Calendar table  — THE GRID FIX
-   The key: table-layout:fixed + fixed width = equal columns guaranteed.
-   Each <td> uses flexbox to centre the circular day button.
+   Calendar table — THE GRID FIX
+
+   CRITICAL: Do NOT put padding/box-sizing on <table>.
+   Instead use border-spacing for internal spacing.
+   table-layout:fixed + explicit column widths = equal 7-column grid.
    -------------------------------------------------------------------------- */
 .timejs-table {
   width:            var(--tj-w);
-  table-layout:     fixed;        /* ← forces equal column widths */
+  table-layout:     fixed;          /* forces equal column widths */
   border-collapse:  separate;
   border-spacing:   0;
-  padding:          6px 8px 4px;
-  box-sizing:       border-box;
+  /* NO padding here — it breaks box model for table elements */
+}
+
+/* Thin vertical gutter around the grid via wrapper padding */
+.timejs-grid-wrap {
+  padding: 6px 8px 4px;
 }
 
 /* Day-of-week headers */
 .timejs-table thead th {
-  width:          calc(var(--tj-w) / 7);
-  height:         28px;
-  text-align:     center;
-  font-size:      10px;
-  font-weight:    700;
-  color:          #9ca3af;
+  width:       calc(var(--tj-w) / 7);
+  height:      28px;
+  text-align:  center;
+  font-size:   10px;
+  font-weight: 700;
+  color:       #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding:        4px 0;
+  padding: 4px 0;
 }
 
 /* All body cells */
@@ -154,20 +161,21 @@
 
 /* --------------------------------------------------------------------------
    Day cells — the circular clickable number
+   .timejs-day is on the inner <span>, NOT on the <td>
    -------------------------------------------------------------------------- */
 .timejs-day {
   display:         inline-flex;
   align-items:     center;
   justify-content: center;
-  width:           var(--tj-cell);
-  height:          var(--tj-cell);
-  border-radius:   50%;
-  font-size:       13px;
-  font-weight:     500;
-  color:           #374151;
-  cursor:          pointer;
-  transition:      background 0.1s, color 0.1s, transform 0.1s;
-  user-select:     none;
+  width:         var(--tj-cell);
+  height:        var(--tj-cell);
+  border-radius: 50%;
+  font-size:   13px;
+  font-weight: 500;
+  color:       #374151;
+  cursor:      pointer;
+  transition:  background 0.1s, color 0.1s, transform 0.1s;
+  user-select: none;
 }
 .timejs-day:hover {
   background: var(--tj-hover-bg);
@@ -195,8 +203,8 @@
 
 /* Today + Selected on same day */
 .timejs-today.timejs-selected {
-  background:  var(--tj-accent-dark) !important;
-  box-shadow:  0 2px 10px rgba(55,48,163,0.5);
+  background: var(--tj-accent-dark) !important;
+  box-shadow: 0 2px 10px rgba(55,48,163,0.5);
 }
 
 /* Empty/padding cells */
@@ -206,26 +214,24 @@
    Footer — Today / Clear
    -------------------------------------------------------------------------- */
 .timejs-footer {
-  display:         flex;
-  gap:             8px;
-  padding:         8px 12px 12px;
-  background:      #fafafa;
-  border-top:      1px solid #f0f0f0;
+  display: flex;
+  gap:     8px;
+  padding: 8px 12px 12px;
+  background:  #fafafa;
+  border-top:  1px solid #f0f0f0;
 }
-
 .timejs-btn {
-  flex:          1;
-  padding:       7px 0;
+  flex:    1;
+  padding: 7px 0;
   border-radius: 8px;
   font-size:     12px;
   font-weight:   700;
   font-family:   var(--tj-font);
-  cursor:        pointer;
-  border:        1.5px solid transparent;
-  transition:    background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  cursor:  pointer;
+  border:  1.5px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
   letter-spacing: 0.02em;
 }
-
 .timejs-today-btn {
   background:   var(--tj-accent);
   color:        #fff;
@@ -236,9 +242,8 @@
   background:   var(--tj-accent-dark);
   border-color: var(--tj-accent-dark);
   box-shadow:   0 2px 8px rgba(79,70,229,0.35);
-  outline:      none;
+  outline: none;
 }
-
 .timejs-clear-btn {
   background:   #fff;
   color:        #6b7280;
@@ -249,29 +254,31 @@
   background:   #fef2f2;
   color:        #b91c1c;
   border-color: #fca5a5;
-  outline:      none;
+  outline: none;
 }
 
 /* --------------------------------------------------------------------------
    Input field (used in demo)
    -------------------------------------------------------------------------- */
 .timejs-input {
-  display:     block;
-  width:       280px;
-  padding:     11px 42px 11px 14px;
+  display: block;
+  width:   280px;
+  padding: 11px 42px 11px 14px;
   font-size:   15px;
   font-family: var(--tj-font);
   color:       #111827;
-  background:  #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%236b7280' stroke-width='1.5' viewBox='0 0 24 24'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E") no-repeat right 13px center;
-  border:      2px solid #e5e7eb;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%236b7280' stroke-width='1.5' viewBox='0 0 24 24'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E")
+    no-repeat right 13px center;
+  border:        2px solid #e5e7eb;
   border-radius: 10px;
-  cursor:      pointer;
-  outline:     none;
-  transition:  border-color 0.15s, box-shadow 0.15s;
-  box-sizing:  border-box;
+  cursor:  pointer;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
 }
 .timejs-input::placeholder { color: #9ca3af; }
-.timejs-input:hover  { border-color: #c4b5fd; }
+.timejs-input:hover         { border-color: #c4b5fd; }
 .timejs-input:focus,
 .timejs-input.timejs-active {
   border-color: var(--tj-accent);
